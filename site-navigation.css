@@ -1,0 +1,47 @@
+
+#site-header{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:14px;margin:0;padding:17px clamp(20px,5vw,90px);background:linear-gradient(#0b100ff5,#0b100fc2);border-bottom:1px solid #c9a27c40;color:#f2eee7;font:600 13px/1.5 system-ui,sans-serif;letter-spacing:.035em}
+body:not(.interior-page) #site-header{position:absolute;inset:0 0 auto}
+#site-header *{box-sizing:border-box}
+#site-header a{color:inherit;text-decoration:none}
+#site-header .brand{flex-shrink:0;padding:0;margin:0;letter-spacing:normal}
+#site-header .brand img{display:block;width:220px;max-width:38vw;height:auto}
+#site-header .nav{display:flex;align-items:center;flex-wrap:nowrap;gap:clamp(10px,1.3vw,22px);font:inherit;letter-spacing:inherit;white-space:nowrap}
+#site-header .nav>a{opacity:.87;padding:9px 0;border-bottom:1px solid transparent}
+#site-header .nav>a:hover,#site-header .nav>a:focus-visible{opacity:1;border-bottom-color:#c9a27c}
+#site-header .about-dropdown{position:relative}
+#site-header summary{cursor:pointer;list-style:none}
+#site-header summary::-webkit-details-marker{display:none}
+#site-header .about-dropdown>summary{display:flex;align-items:center;gap:6px;padding:9px 0}
+#site-header .about-dropdown>summary:after{content:"";width:6px;height:6px;border-right:1px solid currentColor;border-bottom:1px solid currentColor;transform:rotate(45deg);margin-top:-3px}
+#site-header .about-options{position:absolute;top:calc(100% + 6px);left:0;min-width:195px;padding:6px;border:1px solid #ffffff30;border-radius:14px;background:#1a201d;box-shadow:0 12px 35px #0007}
+#site-header .about-options a{display:block;padding:9px 11px;border-radius:8px}
+#site-header .about-options a:hover,#site-header .about-options a:focus-visible{background:#ffffff15}
+#site-header .header-tools{display:flex;align-items:center;gap:8px}
+#site-header .pill{display:inline-block;border:1px solid #eee6db;border-radius:100px;padding:12px 20px;background:#eee6db;color:#141815;font:inherit;letter-spacing:normal}
+#site-header .pill:hover{background:#fff5e7}
+#site-header .mobile-links{display:none}
+#site-header .search-toggle,#site-search .search-toggle{display:grid;place-items:center;min-width:43px;min-height:43px;padding:0;border:1px solid #c9a27c70;border-radius:50%;color:#f2eee7;background:#ffffff0b;cursor:pointer;font:20px system-ui,sans-serif}
+#site-header .search-toggle:hover,#site-search .search-toggle:hover{background:#ffffff20}
+#site-header :is(a,button,summary):focus-visible,#site-search :is(a,button,input):focus-visible{outline:2px solid #dfbd9d;outline-offset:4px}
+#site-search{box-sizing:border-box;width:min(560px,calc(100% - 32px));max-width:560px;max-height:75vh;padding:28px;border:1px solid #ffffff40;border-radius:22px;background:#1a201d;color:#f2eee7;font:16px/1.55 system-ui,sans-serif}
+#site-search::backdrop{background:#000a}
+#site-search .search-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+#site-search h2{font:30px/1.1 Georgia,serif;letter-spacing:normal;margin:0}
+#site-search label{display:block;margin-top:16px}
+#site-search input{box-sizing:border-box;width:100%;padding:12px;margin:12px 0;background:#0e1110;color:#f2eee7;border:1px solid #ffffff55;border-radius:8px;font:inherit}
+#site-search .sub{color:#b7b9b2}
+#site-search .search-results{list-style:none;padding:0;margin:0}
+#site-search .search-results a{display:block;padding:10px;border-bottom:1px solid #ffffff22;color:inherit;text-decoration:none}
+#site-search .search-results a:hover{background:#ffffff15}
+#site-search .search-results small{display:block;color:#b7b9b2;margin-top:3px}
+@media(max-width:1200px){
+ #site-header .nav{display:none}
+ #site-header .mobile-links{display:flex;align-items:center;gap:8px}
+ #site-header .mobile-links>details{position:relative}
+ #site-header .mobile-links nav{display:block;position:absolute;right:0;top:calc(100% + 12px);width:min(300px,calc(100vw - 40px));max-height:75vh;overflow:auto;padding:7px;background:#1a201d;border:1px solid #ffffff30;border-radius:14px;box-shadow:0 12px 35px #0007;font:inherit}
+ #site-header .mobile-links nav>a{display:block;padding:11px;border-radius:8px}
+ #site-header .mobile-links nav>a:hover{background:#ffffff15}
+ #site-header .mobile-links .about-dropdown>summary{padding:11px}
+ #site-header .mobile-links .about-options{position:static;min-width:0;box-shadow:none;border:0;border-left:1px solid #c9a27c60;border-radius:0;margin-left:11px;background:transparent}
+}
+@media(max-width:760px){#site-header{padding:14px 20px}}
