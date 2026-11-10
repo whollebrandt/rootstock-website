@@ -1,0 +1,1 @@
+.interior-page{isolation:isolate}.interior-page::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:url("assets/rootstock-logo-white.png") center / min(94vw,1400px) auto no-repeat;opacity:.095}.interior-page header{position:relative}

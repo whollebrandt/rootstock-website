@@ -5,5 +5,7 @@ weeklySpecial.innerHTML = `
 `;
 
 for (const card of document.querySelectorAll('[data-weekly-special]')) {
-  card.append(weeklySpecial.content.cloneNode(true));
+  const content = weeklySpecial.content.cloneNode(true);
+  if (!card.hasAttribute('data-special-photo')) content.querySelector('img').remove();
+  card.append(content);
 }
