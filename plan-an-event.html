@@ -45,9 +45,11 @@ if (inquiryEndpoint) {
   document.querySelector('#inquiry-note').textContent = 'We’ll use your contact details to respond to your inquiry.';
 } else {
   inquiryForm.addEventListener('submit', event => {
+    if (inquiryForm.dataset.delivery === 'enabled') return;
     event.preventDefault();
     inquiryStatus.textContent = 'Preview submission complete. Your details were not sent.';
   });
 }
 </script><script src="event-data.js"></script><script src="event-calendar.js"></script><script src="site-navigation.js"></script>
+<script src="website-content.js"></script>
 </body></html>

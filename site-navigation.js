@@ -17,16 +17,17 @@ const searchPages = [
   ['Plan an Event', 'plan-an-event.html', 'Private events, wedding, birthday, party, booking, Barrel Room, inquiry'],
   ['Visit Rootstock', './#visit', 'Williamson New York, address, location, directions']
 ];
-for (const [date, listings] of Object.entries(events)) {
-  for (const [name, time] of listings) {
-    const formattedDate = new Intl.DateTimeFormat('en-US', {month:'long', day:'numeric', timeZone:'UTC'}).format(new Date(date));
-    searchPages.push([name, './#events', formattedDate + ' · ' + time, date]);
-  }
-}
 function showSearchResults() {
+  const pages = [...searchPages];
+  for (const [date, listings] of Object.entries(events)) {
+    for (const [name, time] of listings) {
+      const formatted = new Intl.DateTimeFormat('en-US', {month:'long', day:'numeric', timeZone:'UTC'}).format(new Date(date));
+      pages.push([name, './#events', formatted + ' · ' + time, date]);
+    }
+  }
   const words = searchInput.value.toLowerCase().match(/[a-z0-9]+/g) || [];
   searchResults.replaceChildren();
-  const matches = words.length ? searchPages.filter(([title, , summary]) => {
+  const matches = words.length ? pages.filter(([title, , summary]) => {
     const searchable = (title + ' ' + summary).toLowerCase();
     return words.every(word => searchable.includes(word));
   }) : [];
@@ -97,3 +98,4 @@ if (requestedEvent && Object.hasOwn(events, requestedEvent) && typeof show === '
 }
 
 })();
+

@@ -1,19 +1,101 @@
-const eventCategoryLabels = {music:'Music', cornhole:'Cornhole', euchre:'Euchre', jam:'Jam Night', other:'Other events'};
-function eventCategory(title) {
+const eventCategoryLabels = {music:'Music', cornhole:'Cornhole', euchre:'Euchre', jam:'Jam Night', dancing:'Line Dancing', other:'Other events'};
+function eventCategory(title, category) {
+  if (Object.hasOwn(eventCategoryLabels, category)) return category;
   if (/jam night/i.test(title)) return 'jam';
   if (/cornhole/i.test(title)) return 'cornhole';
   if (/euchre/i.test(title)) return 'euchre';
   return musicShows.has(title) ? 'music' : 'other';
 }
+function calendarNode(tag, className, text) {
+  const node = document.createElement(tag);
+  node.className = className;
+  if (text) node.textContent = text;
+  return node;
+}
+function calendarCategory(entry) {
+  return eventCategory(entry[0], entry[4]);
+}
 function categoryMarkers(listings) {
-  const categories = [...new Set(listings.map(([title]) => eventCategory(title)))];
-  return categories.length ? '<span class="day-markers" aria-hidden="true">' + categories.map(category => '<span class="event-dot calendar-' + category + '"></span>').join('') + '</span>' : '';
+  const categories = [...new Set(listings.map(calendarCategory))];
+  const markers = calendarNode('span', 'day-markers');
+  markers.setAttribute('aria-hidden', 'true');
+  markers.append(...categories.map(category => calendarNode('span', 'event-dot calendar-' + category)));
+  return markers;
 }
-function calendarListing([title, time]) {
-  const category = eventCategory(title);
-  return '<span class="calendar-category calendar-' + category + '"><span class="event-dot" aria-hidden="true"></span>' + eventCategoryLabels[category] + '</span> ' + title + ' — ' + time;
+let year = 2026, month = 10, selected = null;
+const cal = document.getElementById('cal'), detail = document.getElementById('detail');
+function key(day) {
+  return year + '-' + String(month + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
 }
-let year=2026,month=10,selected=null;const cal=document.getElementById("cal"),detail=document.getElementById("detail");function key(d){return year+"-"+String(month+1).padStart(2,"0")+"-"+String(d).padStart(2,"0")}function show(d){selected=d;const es=events[key(d)]||[];const date=new Date(year,month,d).toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});detail.innerHTML='<div><span class="tag">'+date+'</span><strong>'+ (es.length?es.map(x=>x[0]).join(" · "):"No listed events")+'</strong><small>'+(es.length?es.map(calendarListing).join("<br>"):"Explore another highlighted date.")+'</small>'+es.map(([title, , flyer, description]) => flyer ? '<a href="'+flyer+'" target="_blank" rel="noopener"><img class="event-flyer" src="'+flyer+'" alt="'+title+' flyer. '+description+'"></a>' : '').join("")+'</div>';render()}function render(){document.getElementById("monthTitle").textContent=new Date(year,month,1).toLocaleDateString("en-US",{month:"long",year:"numeric"});cal.innerHTML="";["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(x=>{let el=document.createElement("div");el.className="weekday";el.textContent=x;cal.append(el)});const first=new Date(year,month,1).getDay(),days=new Date(year,month+1,0).getDate();for(let i=0;i<first;i++){let b=document.createElement("button");b.className="day";b.disabled=true;cal.append(b)}for(let d=1;d<=days;d++){let es=events[key(d)]||[];let b=document.createElement("button");b.className="day"+(es.length?" has-event":"")+(selected===d?" selected":"");b.innerHTML='<span class="day-num">'+d+'</span>'+(es.length?'<span class="day-label">'+es[0][0]+'</span>':"")+categoryMarkers(es);b.setAttribute("aria-label",d+" "+(es.length?es.map(([title])=>title+" ("+eventCategoryLabels[eventCategory(title)]+")").join(", "):"no events"));b.onclick=()=>show(d);cal.append(b)}}function move(n){month+=n;if(month>11){month=0;year++}if(month<0){month=11;year--}selected=null;detail.innerHTML='<div><span class="tag">Browse events</span><strong>Select a highlighted date</strong><small>Event details will appear here.</small></div>';render()}document.getElementById("prev").onclick=()=>move(-1);document.getElementById("next").onclick=()=>move(1);render();
+function show(day) {
+  selected = day;
+  const listings = events[key(day)] || [];
+  const date = new Date(year, month, day).toLocaleDateString('en-US', {weekday:'long',month:'long',day:'numeric'});
+  const panel = document.createElement('div');
+  panel.append(calendarNode('span', 'tag', date), calendarNode('strong', '', listings.map(row => row[0]).join(' · ') || 'No listed events'));
+  if (!listings.length) panel.append(calendarNode('small', '', 'Explore another highlighted date.'));
+  for (const entry of listings) {
+    const [title, time, flyer, description, , , tickets] = entry;
+    const category = calendarCategory(entry);
+    const line = document.createElement('small');
+    const badge = calendarNode('span', 'calendar-category calendar-' + category, eventCategoryLabels[category]);
+    badge.prepend(calendarNode('span', 'event-dot'));
+    line.append(badge, document.createTextNode(' ' + title + (time ? ' — ' + time : '')));
+    panel.append(line);
+    if (description) panel.append(calendarNode('small', 'sub', description));
+    if (flyer) {
+      const link = document.createElement('a');
+      link.href = flyer;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      const image = calendarNode('img', 'event-flyer');
+      image.src = flyer;
+      image.alt = title + ' flyer';
+      link.append(image);
+      panel.append(link);
+    }
+    if (tickets) {
+      const link = calendarNode('a', 'action', 'Buy Tickets');
+      link.href = tickets;
+      panel.append(link);
+    }
+  }
+  detail.replaceChildren(panel);
+  render();
+}
+function render() {
+  document.getElementById('monthTitle').textContent = new Date(year, month, 1).toLocaleDateString('en-US', {month:'long',year:'numeric'});
+  cal.replaceChildren(...['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(day => calendarNode('div', 'weekday', day)));
+  const first = new Date(year, month, 1).getDay();
+  const days = new Date(year, month + 1, 0).getDate();
+  for (let i = 0; i < first; i++) {
+    const empty = calendarNode('button', 'day');
+    empty.disabled = true;
+    cal.append(empty);
+  }
+  for (let day = 1; day <= days; day++) {
+    const listings = events[key(day)] || [];
+    const button = calendarNode('button', 'day' + (listings.length ? ' has-event' : '') + (selected === day ? ' selected' : ''));
+    button.append(calendarNode('span', 'day-num', String(day)));
+    if (listings.length) button.append(calendarNode('span', 'day-label', listings[0][0]), categoryMarkers(listings));
+    button.setAttribute('aria-label', day + ' ' + (listings.map(entry => entry[0] + ' (' + eventCategoryLabels[calendarCategory(entry)] + ')').join(', ') || 'no events'));
+    button.onclick = () => show(day);
+    cal.append(button);
+  }
+}
+function move(change) {
+  const next = new Date(year, month + change, 1);
+  year = next.getFullYear();
+  month = next.getMonth();
+  selected = null;
+  const panel = document.createElement('div');
+  panel.append(calendarNode('span', 'tag', 'Browse events'), calendarNode('strong', '', 'Select a highlighted date'), calendarNode('small', '', 'Event details will appear here.'));
+  detail.replaceChildren(panel);
+  render();
+}
+document.getElementById('prev').onclick = () => move(-1);
+document.getElementById('next').onclick = () => move(1);
+render();
 
 /* Responsive four-day mobile calendar; desktop month grid remains unchanged. */
 (function(){
@@ -76,3 +158,4 @@ let year=2026,month=10,selected=null;const cal=document.getElementById("cal"),de
   move=function(n){offset=0;originalMove(n)};
   drawMobile();
 })();
+

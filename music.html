@@ -63,8 +63,9 @@ application.addEventListener('submit', event => {
     return label + ': ' + fields.get(input.name).trim();
   });
   const subject = 'Rootstock music application: ' + fields.get('act').trim();
-  location.href = 'mailto:music@rootstockciderandspirits.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(lines.join('\n'));
+  location.href = 'mailto:' + (application.dataset.email || 'music@rootstockciderandspirits.com') + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(lines.join('\n'));
 });
 application.querySelector('button').disabled = false;
 </script><script src="site-navigation.js"></script>
+<script src="website-content.js"></script>
 </body></html>

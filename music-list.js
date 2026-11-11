@@ -1,12 +1,14 @@
 const musicList = document.querySelector('#music-list');
-const listingLimit = Number(musicList.dataset.limit || Infinity);
 const ticketDialog = document.querySelector('#ticket-preview');
 const todayInWilliamson = new Intl.DateTimeFormat('en-CA', {timeZone: 'America/New_York', year:'numeric', month:'2-digit', day:'2-digit'}).format(new Date());
+function renderMusicList() {
+  musicList.replaceChildren();
+  const listingLimit = Number(musicList.dataset.limit || Infinity);
 for (const [date, listings] of Object.entries(events).sort(([a], [b]) => a.localeCompare(b))) {
   if (date < todayInWilliamson) continue;
   const dateLabel = new Intl.DateTimeFormat('en-US', {weekday:'short', month:'short', day:'numeric', timeZone:'UTC'}).format(new Date(date));
-  for (const [name, time] of listings) {
-    const show = musicShows.get(name);
+  for (const [name, time, , , category, metadata] of listings) {
+    const show = category ? metadata : musicShows.get(name);
     if (!show || musicList.childElementCount >= listingLimit) continue;
     const row = document.createElement('article');
     row.className = 'show-row';
@@ -41,3 +43,5 @@ for (const [date, listings] of Object.entries(events).sort(([a], [b]) => a.local
   }
 }
 if (!musicList.childElementCount) musicList.textContent = 'Check back for upcoming shows.';
+}
+renderMusicList();
