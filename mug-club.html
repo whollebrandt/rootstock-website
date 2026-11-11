@@ -18,26 +18,44 @@ header img{display:block;width:min(220px,65vw);height:auto}
 nav{display:flex;flex-wrap:wrap;gap:12px 22px;font-size:14px}
 nav a{text-decoration:none}
 nav a:hover,nav a[aria-current]{text-decoration:underline;text-decoration-color:var(--copper)}
-main{width:min(100% - 40px,1060px);margin:auto;padding:clamp(38px,7vw,85px) 0}
-h1,h2{font-family:Georgia,serif;font-weight:400;line-height:1.05}
-h1{font-size:clamp(46px,7vw,80px);margin:14px 0 22px}
-h2{font-size:clamp(28px,4vw,42px);margin:0 0 20px}
-.eyebrow{color:var(--copper);font-size:12px;letter-spacing:.19em;text-transform:uppercase}
-.intro{max-width:720px;font-size:20px}
+main{width:min(100% - 32px,1100px);margin:auto;padding:clamp(24px,5vw,64px) 0}
+.mug-club {
+  --mug-line:color-mix(in srgb,var(--copper) 23%,transparent);
+  display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);
+  grid-template-areas:"status status" "title title" "intro intro" "welcome welcome"
+    "membership benefits-title" "membership benefits" "terms terms";
+  column-gap:clamp(24px,4vw,50px);align-items:start;
+  padding:clamp(20px,5vw,52px);border:1px solid var(--mug-line);border-radius:24px;
+  background:color-mix(in srgb,var(--bg) 92%,var(--ink));
+}
+.mug-club h1,.mug-club h2{font-family:Georgia,serif;font-weight:400;line-height:1.1;overflow-wrap:anywhere}
+.mug-club h1{grid-area:title;font-size:clamp(39px,7vw,76px);margin:7px 0 12px;letter-spacing:-.04em}
+.mug-club h2{grid-area:benefits-title;align-self:end;font-size:clamp(25px,3vw,34px);margin:0 0 7px}
+.eyebrow{color:var(--copper);font-size:12px;font-weight:650;letter-spacing:.12em;text-transform:uppercase}
+.mug-club>.eyebrow{grid-area:status}
+.intro{grid-area:intro;margin:0;font-size:clamp(16px,2vw,19px)}
+.intro+.intro{grid-area:welcome;margin:0 0 clamp(22px,4vw,36px)}
 .sub,footer{color:var(--muted)}
-.membership{margin:30px 0 42px;padding:clamp(22px,4vw,38px);border:1px solid #dfbd9d50;border-radius:22px;background:#1a201de8}
-.membership p{margin:5px 0 18px}
-.price{display:block;font:clamp(42px,6vw,64px)/1.1 Georgia,serif;color:var(--copper);margin:12px 0}
-.actions{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0 10px}
-.action{display:inline-block;padding:13px 23px;border:1px solid #dfbd9d80;border-radius:100px;text-decoration:none;text-align:center}
+.membership{grid-area:membership;border-inline-end:1px solid var(--mug-line);padding-inline-end:clamp(18px,3vw,40px)}
+.membership p{margin:4px 0;line-height:1.45}
+.price{display:block;color:var(--copper);font:clamp(35px,5vw,56px)/1.15 Georgia,serif;margin:7px 0 10px;overflow-wrap:anywhere}
+.price span{display:inline-block;color:var(--ink)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.action{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 16px;border:1px solid var(--mug-line);border-radius:10px;text-decoration:none;text-align:center;font-size:14px;font-weight:650}
 .action.primary{background:#eee6db;color:#141815;border-color:#eee6db}
-.action:hover{box-shadow:0 0 0 2px #dfbd9d60}
-.benefits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:0;list-style:none}
-.benefits li{padding:23px;border:1px solid #ffffff20;border-radius:18px;background:#1a201de8;font-size:18px}
-.benefits li:first-child{font-family:Georgia,serif;font-size:27px;color:var(--copper)}
-.terms{max-width:800px;margin-top:24px}
+.action:hover{border-color:var(--copper);box-shadow:0 0 0 1px var(--copper)}
+.benefits{grid-area:benefits;list-style:none;margin:0;padding:0}
+.benefits li{position:relative;padding:8px 0 8px 17px;line-height:1.4}
+.benefits li+li{border-top:1px solid var(--mug-line)}
+.benefits li::before{content:"";position:absolute;top:1em;left:2px;width:5px;height:5px;border-radius:50%;background:var(--copper)}
+.terms{grid-area:terms;border-top:1px solid var(--mug-line);margin-top:clamp(20px,3vw,28px);padding-top:12px;font-size:14px}
+.terms p{margin:3px 0}
 footer{border-top:1px solid #ffffff20;border-bottom:0;font-size:14px}
-@media(max-width:620px){.benefits{grid-template-columns:1fr}.actions{flex-direction:column;align-items:stretch}nav{gap:10px 16px}.intro{font-size:18px}}
+@media(max-width:740px){
+  .mug-club{grid-template-columns:minmax(0,1fr);grid-template-areas:"status" "title" "intro" "welcome" "membership" "benefits-title" "benefits" "terms";border-radius:18px}
+  .membership{border-inline-end:0;border-bottom:1px solid var(--mug-line);padding:0 0 20px;margin-bottom:20px}
+  .actions .action{flex:1 1 auto}
+}
 </style>
 <link rel="stylesheet" href="site-navigation.css">
 </head>
@@ -50,7 +68,7 @@ footer{border-top:1px solid #ffffff20;border-bottom:0;font-size:14px}
 <p id="site-search-status" class="sub" role="status"></p><ul class="search-results" id="site-search-results"></ul>
 </dialog>
 <main>
-<section aria-labelledby="mug-club-title">
+<section class="mug-club" aria-labelledby="mug-club-title">
 <div class="eyebrow">Now accepting new members!</div>
 <h1 id="mug-club-title">Rootstock Mug Club</h1>
 <p class="intro">Do you love Rootstock? Do you love a good bargain?</p>
